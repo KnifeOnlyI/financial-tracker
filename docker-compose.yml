@@ -2,3 +2,8 @@ version: '2'
 services:
   financial-tracker:
     build: .
+    environment:
+      - APP_TOKEN=${APP_TOKEN}
+      - NODE_ENV=PROD
+    ports:
+      - "${FINANCIAL_TRACKER_PORT}:80"

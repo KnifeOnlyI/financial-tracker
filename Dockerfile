@@ -5,7 +5,9 @@ WORKDIR /usr/src/app
 COPY package.json .
 RUN npm install
 
+COPY ./config ./config
 COPY ./dist ./dist
-RUN npm run build
+
+EXPOSE 80
 
 CMD ["npm", "start"]

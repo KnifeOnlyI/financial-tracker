@@ -22,5 +22,10 @@
     "concurrently": "^6.4.0",
     "nodemon": "^2.0.15",
     "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "@types/node": "^16.11.7",
+    "fastify": "^3.23.1",
+    "fastify-cron": "^1.1.2"
   }
 }
