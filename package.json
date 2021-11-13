@@ -1,0 +1,26 @@
+{
+  "name": "@koi/financial-tracker",
+  "version": "0.0.1",
+  "description": "A simple server-side program to track financial values and send data to specify emails",
+  "license": "MIT",
+  "author": {
+    "name": "Dany Pignoux",
+    "email": "dany.pignoux@outlook.fr",
+    "url": "github.com/KnifeOnlyI"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KnifeOnlyI/financial-tracker.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "build:dev": "tsc --sourceMap --watch",
+    "start:dev": "concurrently -k -n \"Typescript,Node\" -p \"[{name}]\" -c \"blue,green\" \"npm run build:dev\" \"nodemon dist/main.js\""
+  },
+  "devDependencies": {
+    "concurrently": "^6.4.0",
+    "nodemon": "^2.0.15",
+    "typescript": "^4.4.4"
+  }
+}
