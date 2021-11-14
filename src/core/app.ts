@@ -137,7 +137,9 @@ export class App {
   private registerModules(): void {
     this._modules.forEach(module => {
       if (module.context == 'ALL' || module.context.toUpperCase() == this._nodeEnv) {
-        module.onInit(this._context);
+        module.onInit(this._context).catch((err) => {
+          console.log(err);
+        });
 
         module.routes.forEach(route => {
           if (route.context == 'ALL' || route.context.toUpperCase() == this._nodeEnv) {

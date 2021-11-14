@@ -9,7 +9,6 @@ A simple server-side program to track financial values and send data to specify 
 - FINANCIAL_TRACKER_SENDER_EMAIL_PORT
 - FINANCIAL_TRACKER_SENDER_EMAIL_USER
 - FINANCIAL_TRACKER_SENDER_EMAIL_PASSWORD
-- FINANCIAL_TRACKER_RECEIVERS (email1,email2, ...)
 
 ## NPM commands
 
@@ -79,4 +78,10 @@ Build/Rebuild application
 
 ```bash
 docker-compose build
+```
+
+Start bash session into postresql container :
+
+```bash
+docker exec -ti financialtracker_financial-tracker-postgresql_1 bash
 ```

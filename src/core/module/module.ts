@@ -18,7 +18,10 @@ export class Module {
    */
   constructor(
     public context: 'ALL' | 'PROD' | 'DEV',
-    public readonly onInit: (context: AppContext) => void = () => {
+    public readonly onInit: (context: AppContext) => Promise<void> = () => {
+      return new Promise<void>(() => {
+      }).catch(() => {
+      });
     },
     public readonly routes = new Array<Route>(),
     public readonly cron = new Array<Cron>()
