@@ -1,6 +1,5 @@
 import {Services} from '../services/services';
 import Configuration from '../configuration/configuration';
-import {Cron} from '../cron/cron';
 
 /**
  * Represent an application context
@@ -13,12 +12,10 @@ export class AppContext {
    *
    * @param configuration The configuration
    * @param services The services
-   * @param crons The list of cron jobs
    */
   constructor(
     public readonly configuration: Configuration,
-    public readonly services: Services,
-    public readonly crons: Array<Cron>
+    public readonly services: Services
   ) {
   }
 }

@@ -11,11 +11,13 @@ export class Route {
   /**
    * Create a new route
    *
+   * @param context The context
    * @param method The method
    * @param url The URL
    * @param handler The handler
    */
   constructor(
+    public readonly context: 'ALL' | 'PROD' | 'DEV',
     public readonly method: HTTPMethods,
     public readonly url: string,
     public readonly handler: (request: FastifyRequest, response: FastifyReply, context: AppContext) => void

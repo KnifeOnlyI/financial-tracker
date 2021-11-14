@@ -5,6 +5,11 @@ A simple server-side program to track financial values and send data to specify 
 ## Environment variables
 
 - FINANCIAL_TRACKER_PORT (The app port listening)
+- FINANCIAL_TRACKER_SENDER_EMAIL_HOST
+- FINANCIAL_TRACKER_SENDER_EMAIL_PORT
+- FINANCIAL_TRACKER_SENDER_EMAIL_USER
+- FINANCIAL_TRACKER_SENDER_EMAIL_PASSWORD
+- FINANCIAL_TRACKER_RECEIVERS (email1,email2, ...)
 
 ## NPM commands
 
@@ -40,6 +45,20 @@ Start application
 
 ```bash
 npm start
+```
+
+## Docker commands (development)
+
+Start maildev
+
+```bash
+docker-compose -f maildev.yml up -d
+```
+
+Stop maildev
+
+```bash
+docker stop financialtracker_financial-tracker-maildev_1
 ```
 
 ## Docker commands (production)

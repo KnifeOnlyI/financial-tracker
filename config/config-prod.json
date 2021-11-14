@@ -1,4 +1,20 @@
 {
   "port": 80,
-  "appToken": "%APP_TOKEN%"
+  "isin": [
+    "FR0000073272",
+    "FR0000120644"
+  ],
+  "emails": {
+    "sender": {
+      "from": "%FINANCIAL_TRACKER_SENDER_EMAIL_USER%",
+      "host": "%FINANCIAL_TRACKER_SENDER_EMAIL_HOST%",
+      "port": "%FINANCIAL_TRACKER_SENDER_EMAIL_PORT%",
+      "username": "%FINANCIAL_TRACKER_SENDER_EMAIL_USER%",
+      "password": "%FINANCIAL_TRACKER_SENDER_EMAIL_PASSWORD%",
+      "ignoreTLS": true,
+      "protocol": "smtp",
+      "auth": true
+    },
+    "receivers": "%FINANCIAL_TRACKER_RECEIVERS%"
+  }
 }

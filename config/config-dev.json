@@ -1,4 +1,20 @@
 {
   "port": 8080,
-  "appToken": "123456abcdef"
+  "isin": [
+    "FR0000073272",
+    "FR0000120644"
+  ],
+  "emails": {
+    "sender": {
+      "from": "news@financial-tracker.com",
+      "host": "localhost",
+      "port": 25,
+      "username": null,
+      "password": null,
+      "ignoreTLS": true,
+      "protocol": null,
+      "auth": false
+    },
+    "receivers": "fake-user-1@yopmail.com,fake-user-2@yopmail.com,fake-user-3@yopmail.com"
+  }
 }

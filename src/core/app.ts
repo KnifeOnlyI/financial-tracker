@@ -39,6 +39,11 @@ export class App {
   private readonly _modules = new Array<Module>();
 
   /**
+   * The all cron jobs
+   */
+  private readonly _cronJobs = new Array<Cron>();
+
+  /**
    * Create a new app
    *
    * @param configPath The configuration path
@@ -55,8 +60,7 @@ export class App {
 
     this._context = new AppContext(
       new ConfigurationService(configPath, this._nodeEnv),
-      new Services(),
-      new Array<Cron>()
+      new Services()
     );
 
     this._serverPortListening = this._context.configuration.get('port');
@@ -76,8 +80,13 @@ export class App {
    * Add the specified module
    *
    * @param module The module to add
+   * @param context The overwritten context
    */
-  addModule(module: Module): void {
+  addModule(module: Module, context: 'ALL' | 'PROD' | 'DEV' | null = null): void {
+    if (context) {
+      module.context = context;
+    }
+
     this._modules.push(module);
   }
 
@@ -111,7 +120,7 @@ export class App {
   private registerCronJobs(): void {
     const jobs: any = [];
 
-    this._context.crons.forEach(cron => {
+    this._cronJobs.forEach(cron => {
       jobs.push({
         cronTime: cron.expression,
         onTick: async () => cron.onTick(this._context),
@@ -130,7 +139,17 @@ export class App {
       if (module.context == 'ALL' || module.context.toUpperCase() == this._nodeEnv) {
         module.onInit(this._context);
 
-        module.routes.forEach(route => this.registerRoute(route));
+        module.routes.forEach(route => {
+          if (route.context == 'ALL' || route.context.toUpperCase() == this._nodeEnv) {
+            this.registerRoute(route);
+          }
+        });
+
+        module.cron.forEach(cron => {
+          if (cron.context == 'ALL' || cron.context.toUpperCase() == this._nodeEnv) {
+            this._cronJobs.push(cron);
+          }
+        });
       }
     });
   }

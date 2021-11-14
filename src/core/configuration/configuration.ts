@@ -47,7 +47,7 @@ export default class Configuration {
    *
    * @param path The path of value to get
    */
-  get(path: string): any {
+  get<T>(path: string): T {
     let valueIndex = this._cache.findIndex((entry) => {
       return path === entry.path;
     });

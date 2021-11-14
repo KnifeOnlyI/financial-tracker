@@ -1,5 +1,6 @@
 import {Route} from '../routing/route';
 import {AppContext} from '../context/app-context';
+import {Cron} from '../cron/cron';
 
 /**
  * Represent a module
@@ -13,12 +14,14 @@ export class Module {
    * @param context The context
    * @param onInit The callback executed when the module initialized (TODO: Allow to user to register services into)
    * @param routes The routes
+   * @param cron The cron
    */
   constructor(
-    public readonly context: 'ALL' | 'PROD' | 'DEV',
+    public context: 'ALL' | 'PROD' | 'DEV',
     public readonly onInit: (context: AppContext) => void = () => {
     },
     public readonly routes = new Array<Route>(),
+    public readonly cron = new Array<Cron>()
   ) {
   }
 
@@ -29,5 +32,14 @@ export class Module {
    */
   addRoute(route: Route): void {
     this.routes.push(route);
+  }
+
+  /**
+   * Add the specified cron to the module
+   *
+   * @param cron The cron to add
+   */
+  addCron(cron: Cron): void {
+    this.cron.push(cron);
   }
 }

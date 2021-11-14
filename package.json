@@ -19,13 +19,20 @@
     "start:dev": "concurrently -k -n \"Typescript,Node\" -p \"[{name}]\" -c \"blue,green\" \"npm run build:dev\" \"nodemon dist/main.js\""
   },
   "devDependencies": {
+    "@types/dom-parser": "^0.1.1",
+    "@types/node-fetch": "^3.0.3",
+    "@types/nodemailer": "^6.4.4",
     "concurrently": "^6.4.0",
     "nodemon": "^2.0.15",
     "typescript": "^4.4.4"
   },
   "dependencies": {
     "@types/node": "^16.11.7",
+    "dom-parser": "^0.1.6",
     "fastify": "^3.23.1",
-    "fastify-cron": "^1.1.2"
+    "fastify-cron": "^1.1.2",
+    "node-fetch": "2.0",
+    "node-html-parser": "^5.1.0",
+    "nodemailer": "^6.7.0"
   }
 }
