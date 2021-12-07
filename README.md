@@ -71,6 +71,12 @@ Start application
 docker-compose up -d
 ```
 
+With a .env file
+
+```bash
+docker-compose --env-file ./.env up -d
+```
+
 Stop application
 
 ```bash
