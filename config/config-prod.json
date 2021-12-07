@@ -19,5 +19,8 @@
       "protocol": "smtp",
       "auth": true
     }
+  },
+  "view": {
+    "templates": "views"
   }
 }

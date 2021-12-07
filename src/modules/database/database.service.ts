@@ -1,5 +1,5 @@
 import {Pool} from 'pg';
-import Configuration from '../../core/configuration/configuration';
+import {Configuration} from '../../core/configuration/configuration';
 import {DatabaseResults} from './database-results';
 import {DatabaseError} from './database-error';
 
@@ -22,18 +22,18 @@ export class DatabaseService {
   /**
    * Create a new database service
    *
-   * @param _configuration The configuration
+   * @param configuration The configuration
    */
-  constructor(private readonly _configuration: Configuration) {
+  constructor(configuration: Configuration) {
     this.mainPool = new Pool({
-      host: _configuration.get('database.host'),
-      port: _configuration.get('database.port'),
-      database: _configuration.get('database.name'),
-      user: _configuration.get('database.user'),
-      password: _configuration.get('database.password'),
+      host: configuration.get('database.host'),
+      port: configuration.get('database.port'),
+      database: configuration.get('database.name'),
+      user: configuration.get('database.user'),
+      password: configuration.get('database.password'),
     });
 
-    this.logQueries = _configuration.get('database.logs');
+    this.logQueries = configuration.get('database.logs');
   }
 
   /**

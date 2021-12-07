@@ -1,5 +1,5 @@
 import {Services} from '../services/services';
-import Configuration from '../configuration/configuration';
+import {Configuration} from '../configuration/configuration';
 
 /**
  * Represent an application context

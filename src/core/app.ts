@@ -2,7 +2,7 @@ import fastify from 'fastify';
 import {Module} from './module/module';
 import {Route} from './routing/route';
 import {Services} from './services/services';
-import ConfigurationService from './configuration/configuration';
+import {Configuration} from './configuration/configuration';
 import {AppContext} from './context/app-context';
 import fastifyCron from 'fastify-cron';
 import {Cron} from './cron/cron';
@@ -59,7 +59,7 @@ export class App {
     this._server = fastify({logger: false});
 
     this._context = new AppContext(
-      new ConfigurationService(configPath, this._nodeEnv),
+      new Configuration(configPath, this._nodeEnv),
       new Services()
     );
 

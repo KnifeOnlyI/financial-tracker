@@ -6,6 +6,7 @@ COPY package.json .
 RUN npm install
 
 COPY ./config ./config
+COPY ./views ./views
 COPY ./dist ./dist
 
 EXPOSE 80

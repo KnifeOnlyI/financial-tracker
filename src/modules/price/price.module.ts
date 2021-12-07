@@ -2,14 +2,21 @@ import {Module} from '../../core/module/module';
 import {PriceService} from './price.service';
 import {Cron} from '../../core/cron/cron';
 import {MailService} from '../mail/mail.service';
-import Configuration from '../../core/configuration/configuration';
+import {Configuration} from '../../core/configuration/configuration';
 import {DatabaseService} from '../database/database.service';
 import {Route} from '../../core/routing/route';
 import {StockModel} from './stock.model';
 import {ReceiverModel} from './receiver.model';
+import {TwigService} from '../twig/twig.service';
 
 const priceModule = new Module('ALL', async ({services}) => {
   services.add('price', new PriceService(services.get('fetch')));
+
+  // Add the 'price' twig filter
+  services.get<TwigService>('twig').addFilter(
+    'price',
+    (left => left?.toFixed(3).replace('.', ','))
+  );
 });
 
 priceModule.addRoute(new Route(
@@ -17,7 +24,7 @@ priceModule.addRoute(new Route(
   'GET',
   '/prices',
   async (request, response, {configuration, services}) => {
-    sendPrices(configuration, services.get('database'), services.get('price'), services.get('mail'));
+    sendPrices(configuration, services.get('database'), services.get('price'), services.get('mail'), services.get('twig'));
 
     return {};
   }
@@ -73,54 +80,21 @@ async function getReceivers(databaseService: DatabaseService): Promise<Array<Rec
 }
 
 /**
- * Build the HTML body for the email according to the specified stocks
- *
- * @param receiver The receiver
- * @param stocks The stocks
- *
- * @return The HTML
- */
-function buildHTMLBody(receiver: ReceiverModel, stocks: Array<StockModel>): string {
-  let rows = '';
-
-  stocks.forEach(stock => {
-    const formatedStockPrice = stock.price?.toFixed(3).replace('.', ',');
-
-    rows += `<tr>
-      <td>${stock.isin?.toUpperCase()}</td>
-      <td>${stock.label?.toUpperCase()}</td>
-      <td style="text-align: right; border-left: 1px solid black;">${formatedStockPrice} €</td>
-    </tr>`;
-  });
-
-  return `
-<p>Dear ${receiver.name},</p>
-<table style="table-layout: fixed;width: 100%;border-collapse: collapse;border: 1px solid black;text-align:center;">
-  <thead style="border-bottom: 1px solid black; background: yellow;">
-    <tr>
-      <th>ISIN</th>
-      <th>Stock</th>
-      <th style="text-align: center; border-left: 1px black solid;">Price</th>
-    </tr>
-  </thead>
-  <tbody>
-  ${rows}
-  </tbody>
-</table>
-<p>Best regards.</p>
-<hr>
-<p>Financial tracker team</p>`;
-}
-
-/**
  * Send all prices to receivers
  *
  * @param configuration The configuration
  * @param databaseService The database service
  * @param priceService The price service
  * @param mailService The mail service
+ * @param twigService The twig service
  */
-async function sendPrices(configuration: Configuration, databaseService: DatabaseService, priceService: PriceService, mailService: MailService): Promise<void> {
+async function sendPrices(
+  configuration: Configuration,
+  databaseService: DatabaseService,
+  priceService: PriceService,
+  mailService: MailService,
+  twigService: TwigService
+): Promise<void> {
   const stocks = await getStockPrices(databaseService, priceService);
   const receivers = await getReceivers(databaseService);
 
@@ -131,7 +105,7 @@ async function sendPrices(configuration: Configuration, databaseService: Databas
         configuration.get<string>('emails.sender.from'),
         receiver.email,
         'Financial Tracker - NEWS',
-        buildHTMLBody(receiver, stocks)
+        twigService.render('email/email.html.twig', {receiver, stocks})
       );
     });
   }
@@ -141,7 +115,7 @@ priceModule.addCron(new Cron(
   'ALL',
   '0 17 * * 1-5', // At 17:00 on every day-of-week from Monday through Friday.
   async ({configuration, services}) => {
-    await sendPrices(configuration, services.get('database'), services.get('price'), services.get('mail'));
+    await sendPrices(configuration, services.get('database'), services.get('price'), services.get('mail'), services.get('twig'));
   }
 ));
 

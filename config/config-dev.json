@@ -19,5 +19,8 @@
       "protocol": null,
       "auth": false
     }
+  },
+  "view": {
+    "templates": "views"
   }
 }

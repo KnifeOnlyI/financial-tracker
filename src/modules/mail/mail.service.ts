@@ -1,5 +1,5 @@
 import nodemailer, {Transporter} from 'nodemailer';
-import Configuration from '../../core/configuration/configuration';
+import {Configuration} from '../../core/configuration/configuration';
 
 /**
  * Service to manage a mails

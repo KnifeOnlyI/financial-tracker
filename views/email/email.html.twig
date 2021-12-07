@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Financial tracker</title>
+</head>
+<body>
+<p>Dear {{ receiver.name }},</p>
+<table style="table-layout: fixed;width: 100%;border-collapse: collapse;border: 1px solid black;text-align:center;">
+    <thead style="border-bottom: 1px solid black; background: yellow;">
+    <tr>
+        <th>ISIN</th>
+        <th>Stock</th>
+        <th style="text-align: center; border-left: 1px black solid;">Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for stock in stocks %}
+        <tr>
+            <td>{{ stock.isin|upper }}</td>
+            <td>{{ stock.label|upper }}</td>
+            <td style="text-align: right; border-left: 1px solid black;">{{ stock.price|price }} €</td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+<p>Best regards.</p>
+<hr>
+<p>Financial tracker team</p>
+</body>
+</html>

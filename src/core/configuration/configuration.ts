@@ -15,7 +15,7 @@ interface CacheEntry {
  *
  * @author Dany Pignoux (dany.pignoux@outlook.fr)
  */
-export default class Configuration {
+export class Configuration {
   /** The execution environment */
   public readonly env: string;
 
