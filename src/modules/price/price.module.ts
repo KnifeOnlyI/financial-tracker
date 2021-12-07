@@ -23,7 +23,7 @@ priceModule.addRoute(new Route(
   'DEV',
   'GET',
   '/prices',
-  async (request, response, {configuration, services}) => {
+  (request, response, {configuration, services}) => {
     sendPrices(configuration, services.get('database'), services.get('price'), services.get('mail'), services.get('twig'));
 
     return {};
@@ -95,20 +95,27 @@ async function sendPrices(
   mailService: MailService,
   twigService: TwigService
 ): Promise<void> {
-  const stocks = await getStockPrices(databaseService, priceService);
-  const receivers = await getReceivers(databaseService);
+  Promise.allSettled([
+    getStockPrices(databaseService, priceService),
+    getReceivers(databaseService)]
+  ).then((results: Array<any>) => {
+    const stocks = results[0].value as Array<StockModel>;
+    const receivers = results[1].value as Array<ReceiverModel>;
 
-  if (stocks.length > 0) {
-    // Send emails
-    receivers.forEach(receiver => {
-      mailService.sendMail(
-        configuration.get<string>('emails.sender.from'),
-        receiver.email,
-        'Financial Tracker - NEWS',
-        twigService.render('email/email.html.twig', {receiver, stocks})
-      );
-    });
-  }
+    if (stocks.length > 0) {
+      // Send emails
+      receivers.forEach(receiver => {
+        mailService.sendMail(
+          configuration.get<string>('emails.sender.from'),
+          receiver.email,
+          'Financial Tracker - NEWS',
+          twigService.render('email/email.html.twig', {receiver, stocks})
+        );
+      });
+    }
+  }).catch((error) => {
+    console.error('Error', error);
+  });
 }
 
 priceModule.addCron(new Cron(
