@@ -1,5 +1,5 @@
 import {Module} from '../../core/module/module';
-import {PriceService} from './price.service';
+import {StockService} from './stock.service';
 import {Cron} from '../../core/cron/cron';
 import {MailService} from '../mail/mail.service';
 import {Configuration} from '../../core/configuration/configuration';
@@ -10,7 +10,7 @@ import {ReceiverModel} from './receiver.model';
 import {TwigService} from '../twig/twig.service';
 
 const priceModule = new Module('ALL', async ({services}) => {
-  services.add('price', new PriceService(services.get('fetch')));
+  services.add('stock', new StockService(services.get('database'), services.get('fetch')));
 
   // Add the 'price' twig filter
   services.get<TwigService>('twig').addFilter(
@@ -24,43 +24,11 @@ priceModule.addRoute(new Route(
   'GET',
   '/prices',
   (request, response, {configuration, services}) => {
-    sendPrices(configuration, services.get('database'), services.get('price'), services.get('mail'), services.get('twig'));
+    sendPrices(configuration, services.get('database'), services.get('stock'), services.get('mail'), services.get('twig'));
 
     return {};
   }
 ));
-
-/**
- * Get stocks prices of the stocks in database
- *
- * @param databaseService The database service
- * @param priceService The price service
- *
- * @return The stocks prices
- */
-async function getStockPrices(databaseService: DatabaseService, priceService: PriceService): Promise<Array<StockModel>> {
-  const stocks = new Array<StockModel>();
-
-  const isinList = await databaseService.query<StockModel>(
-    'SELECT * FROM stock'
-  );
-
-  if (!isinList.rows) {
-    throw isinList;
-  }
-
-  // Get all prices
-  for (let i = 0; i < isinList.rows.length; i++) {
-    stocks.push(new StockModel(
-      isinList.rows[i].id,
-      isinList.rows[i].isin,
-      isinList.rows[i].label,
-      await priceService.getPrice(isinList.rows[i].isin as string)
-    ));
-  }
-
-  return stocks;
-}
 
 /**
  * Get all receivers
@@ -84,19 +52,19 @@ async function getReceivers(databaseService: DatabaseService): Promise<Array<Rec
  *
  * @param configuration The configuration
  * @param databaseService The database service
- * @param priceService The price service
+ * @param stockService The price service
  * @param mailService The mail service
  * @param twigService The twig service
  */
 async function sendPrices(
   configuration: Configuration,
   databaseService: DatabaseService,
-  priceService: PriceService,
+  stockService: StockService,
   mailService: MailService,
   twigService: TwigService
 ): Promise<void> {
   Promise.allSettled([
-    getStockPrices(databaseService, priceService),
+    stockService.getAll(),
     getReceivers(databaseService)]
   ).then((results: Array<any>) => {
     const stocks = results[0].value as Array<StockModel>;
@@ -122,7 +90,7 @@ priceModule.addCron(new Cron(
   'ALL',
   '0 17 * * 1-5', // At 17:00 on every day-of-week from Monday through Friday.
   async ({configuration, services}) => {
-    await sendPrices(configuration, services.get('database'), services.get('price'), services.get('mail'), services.get('twig'));
+    await sendPrices(configuration, services.get('database'), services.get('stock'), services.get('mail'), services.get('twig'));
   }
 ));
 

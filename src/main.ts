@@ -1,5 +1,6 @@
 import {App} from './core/app';
 import path from 'path';
+import indexModule from './modules/index/index.module';
 import priceModule from './modules/price/price.module';
 import fetchModule from './modules/fetch/fetch.module';
 import mailModule from './modules/mail/mail.module';
@@ -16,6 +17,7 @@ app.addModule(initModule);
 app.addModule(fetchModule);
 app.addModule(mailModule);
 app.addModule(twigModule);
+app.addModule(indexModule);
 app.addModule(priceModule);
 
 app.start();

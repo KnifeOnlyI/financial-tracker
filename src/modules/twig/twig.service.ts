@@ -27,6 +27,7 @@ export class TwigService {
    * @return The string HTML results
    */
   render(templateFilepath: string, data?: any): string {
+    // FIXME: Actually cannot use {% includes %} blocks
     return Twig.twig({
       data: fs.readFileSync(path.resolve(`${this.baseTemplatePath}/${templateFilepath}`)).toString()
     }).render(data);

@@ -13,10 +13,10 @@ export class StockModel {
    * @param price The price
    */
   constructor(
-    public readonly id?: number,
-    public readonly isin?: string,
-    public readonly label?: string,
-    public readonly price?: number
+    public id?: number,
+    public isin?: string,
+    public label?: string,
+    public price?: number
   ) {
   }
 }
